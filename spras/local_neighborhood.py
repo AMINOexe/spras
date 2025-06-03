@@ -36,6 +36,12 @@ class LocalNeighborhood(PRM):
         if not nodes or not network or not output_file:
             raise ValueError('Required local_neighborhood arguments are missing')
 
+        with Path(network).open() as network_f:
+            for line in network_f:
+                line = line.strip()
+                endpoints = line.split("|")
+                if len(endpoints) != 2:
+                    raise ValueError(f"Edge {line} does not contain 2 nodes separated by '|'") 
         work_dir = '/spras'
 
         volumes = list()
@@ -68,13 +74,6 @@ class LocalNeighborhood(PRM):
         print(out)
         output_edges = Path(out_dir,'out','test.txt')
         output_edges.rename(output_file)
-
-        with Path(network).open() as network_f:
-            for line in network_f:
-                line = line.strip()
-                endpoints = line.split("|")
-                if len(endpoints) != 2:
-                    raise ValueError(f"Edge {line} does not contain 2 nodes separated by '|'") 
 
     @staticmethod
     def parse_output(raw_pathway_file, standardized_pathway_file):

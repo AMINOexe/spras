@@ -74,6 +74,11 @@ In addition, not all pathway reconstruction algorithms are compatible with Alpin
 The `Dockerfile` does not need an `ENTRYPOINT` or `CMD` line.
 It will be used to run a Python command.
 
+Note: When using macOS you may need to add docker to your path file manually. This can be done by adding the following line to your computers profile file (the default profile file on macOS is "~/.zprofile"). 
+```
+export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+```
+
 Build the Docker image by running
 ```
 docker build -t <username>/local-neighborhood -f Dockerfile .
@@ -144,6 +149,8 @@ A "prize" is a term for a numeric score on a node in a network, so nodes that ha
 The network should be all of the edges written in the format `<vertex1>|<vertex2>`, which also differs from the `omicsintegrator1.py` example.
 `spras/dataset.py` provides functions that provide access to node information and the interactome (edge list).
 
+The `generate_inputs` function should produce a network file and a node file which match the formatting seen in test/LocalNeighborhood/input/ln-network.txt and test/LocalNeighborhood/input/ln-nodes.txt respectivley.
+
 Implement the `run` function, following the PathLinker example.
 The `prepare_volume` utility function is needed to prepare the network and nodes input files to be mounted and used inside the container.
 It is also used to prepare the path for the output file, which is different from how the output is prepared in the PathLinker example.
@@ -199,7 +206,7 @@ First pull the image `<username>/local-neighborhood` from Docker Hub.
 Then build the Docker image using the `Dockerfile` that was completed in Step 2.
 
 Modify generate inputs:
-1. Include a key-value pair in the algo_exp_file dictionary that links the specific algorithm to its expected network file.
+1. Include a key-value pair in the algo_exp_file dictionary (found in test/generate-inputs/test_generate_inputs.py) that links the specific algorithm to its expected network file.
 2. Obtain the expected network file from the workflow, manually confirm it is correct, and save it to `test/generate-inputs/expected`. Name it as `{algorithm_name}-{network_file_name}-expected.txt`.
 
 Modify parse outputs:
